@@ -1,85 +1,72 @@
-# witanime-cloudstream
+# WitAnime CloudStream Plugin
 
-> CloudStream 3 extension for **[WitAnime (witanime.you)](https://witanime.you)** –
-> Arabic-subtitled anime streaming.
+A CloudStream 3 extension for [WitAnime (witanime.you)](https://witanime.you) –
+an Arabic anime streaming site with Arabic subtitles.
 
----
+## Features
 
-## ⚡ Quick Install (CloudStream app)
+| Feature | Supported |
+|---------|-----------|
+| Arabic UI | ✅ |
+| Browse home page | ✅ |
+| Latest episodes | ✅ |
+| Currently airing | ✅ |
+| Movies | ✅ |
+| OVA / ONA / Specials | ✅ |
+| Anime list | ✅ |
+| Search | ✅ |
+| Episode list | ✅ |
+| Video servers | ok.ru · Streamwish · Dailymotion · Videa · yonaplay |
 
-1. Open CloudStream → **Settings ⚙️ → Extensions → Add repository**
-2. Paste this URL:
+## Video Servers Handled
 
-```
-https://raw.githubusercontent.com/YOUR_USERNAME/witanime-cloudstream/builds/repo.json
-```
+The site uses the following embed servers (all supported via CloudStream's built-in extractors):
 
-> Replace `YOUR_USERNAME` with your GitHub username after you fork/clone this repo.
+- **ok.ru** — Odnoklassniki video
+- **streamwish** — StreamWish player
+- **dailymotion** — Dailymotion embed
+- **videa** — Videa.hu
+- **yonaplay** — Multi-source player (URLs extracted from page source)
 
----
-
-## 📦 Manual install
-
-Download the latest `.cs3` file from the
-[Releases](../../releases/latest) page and sideload it in CloudStream via
-**Settings → Extensions → Install from file**.
-
----
-
-## 🛠 Build from source
-
-Requirements: JDK 17, Android SDK
-
-```bash
-git clone https://github.com/YOUR_USERNAME/witanime-cloudstream
-cd witanime-cloudstream
-chmod +x gradlew
-./gradlew WitAnime:make          # builds WitAnime.cs3
-./gradlew WitAnime:deployWithAdb # push directly to a connected phone
-```
-
-The `.cs3` output is in `WitAnime/build/`.
-
----
-
-## ✅ Features
-
-| | |
-|---|---|
-| 🌐 Language | Arabic (`ar`) |
-| 🏠 Home sections | الرئيسية · آخر الحلقات · أفلام · يعرض الآن · TV · OVA · قائمة الأنمي |
-| 🔍 Search | ✅ |
-| 📺 Types | Anime · AnimeMovie · OVA |
-| 🎬 Video servers | ok.ru · Streamwish · Dailymotion · Videa · yonaplay |
-
----
-
-## 📁 Repository structure
+## File Structure
 
 ```
-witanime-cloudstream/
-├── .github/workflows/build.yml   ← Auto-builds & publishes on push
-├── WitAnime/
-│   ├── build.gradle.kts          ← Plugin metadata
-│   └── src/main/kotlin/com/witanime/
-│       ├── WitAnimePlugin.kt     ← Entry point
-│       └── WitAnimeProvider.kt   ← Scraper
-├── build.gradle.kts              ← Root build
-├── settings.gradle.kts           ← Module registry
-└── gradle.properties
+WitAnime/
+├── build.gradle.kts                          ← Plugin metadata
+└── src/main/kotlin/com/witanime/
+    ├── WitAnimePlugin.kt                     ← Plugin entry point
+    └── WitAnimeProvider.kt                   ← Main scraper
 ```
 
----
+## How to Build
 
-## ➕ Adding more extensions
+1. Clone the [CloudStream-Extensions template](https://github.com/recloudstream/cloudstream-extensions).
+2. Drop the `WitAnime/` folder into the extensions root.
+3. Add `':WitAnime'` to `settings.gradle`.
+4. Run:
+   ```bash
+   ./gradlew WitAnime:make
+   ./gradlew WitAnime:deployWithAdb   # optional: push directly to phone
+   ```
 
-1. Create a new folder (e.g. `MyProvider/`) with the same structure as `WitAnime/`.
-2. Add `include(":MyProvider")` to `settings.gradle.kts`.
-3. Push → GitHub Actions builds and adds it to `repo.json` automatically.
+## How to Install (pre-built)
 
----
+1. Open CloudStream → **Settings → Extensions → Add repo**.
+2. Enter your repo URL, or sideload the generated `.cs3` file directly.
 
-## ⚠️ Disclaimer
+## Notes
 
-For personal / educational use only.
-Respect the site's terms of service.
+- The site is Arabic-only (`lang = "ar"`).
+- Episode list construction uses three strategies in order:
+  1. Direct `<a href="/episode/…">` links found in the anime page HTML.
+  2. Any `/episode/` link containing the anime slug.
+  3. Constructing URLs from the episode count (e.g. `/episode/one-piece-الحلقة-1/`).
+- If an anime has no episode count visible and the JS-rendered episode list
+  is not in the raw HTML, only aired episodes that appear as links will load.
+- Video URLs are scraped from `data-embed` attributes, `<iframe>` tags, and
+  inline `<script>` JSON – whichever the page uses.
+
+## Disclaimer
+
+This plugin is for personal/educational use only.
+Always respect the site's terms of service.

@@ -1,25 +1,23 @@
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://jitpack.io")
-    }
+version = 1
 
-    dependencies {
-        classpath("com.android.tools.build:gradle:7.4.2")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
-        classpath("com.github.recloudstream:gradle:master-SNAPSHOT")
-    }
-}
+cloudstream {
+    language = "ar"
+    authors = listOf("community")
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-        maven("https://jitpack.io")
-    }
-}
+    /**
+     * Status:
+     * 0 = Down
+     * 1 = Ok
+     * 2 = Slow
+     * 3 = Beta only
+     */
+    status = 1
 
-task<Delete>("clean") {
-    delete(rootProject.buildDir)
+    tvTypes = listOf(
+        "Anime",
+        "AnimeMovie",
+        "OVA",
+    )
+
+    iconUrl = "https://witanime.you/wp-content/uploads/2023/08/cropped-Logo-WITU-270x270.png"
 }
